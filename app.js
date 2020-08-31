@@ -1,0 +1,66 @@
+let score = 0;
+const spanScore = document.querySelector('#score')
+
+function isTouching(a, b) {
+	const aRect = a.getBoundingClientRect();
+	const bRect = b.getBoundingClientRect();
+
+	return !(
+		aRect.top + aRect.height < bRect.top ||
+		aRect.top > bRect.top + bRect.height ||
+		aRect.left + aRect.width < bRect.left ||
+		aRect.left > bRect.left + bRect.width
+	);
+}
+
+const avatar = document.querySelector('#player')
+
+const coin = document.querySelector('#coin')
+
+window.addEventListener('keyup', function(e){
+    if(isTouching(avatar, coin)) {
+        moveCoin();
+        score++;
+        spanScore.innerText = score
+    }
+
+    if(e.key === 'ArrowDown' || e.key === 'Down'){
+        moveVertical(avatar, 50)
+    }
+    else if(e.key === 'ArrowUp' || e.key === 'Up'){
+        moveVertical(avatar, -50)
+    }
+    else if(e.key === 'ArrowRight' || e.key === 'Right'){
+        moveHorizontal(avatar, 50)
+        avatar.style.transform = 'scale(-1,1)'
+    }
+    else if(e.key === 'ArrowLeft' || e.key === 'Left'){
+        moveHorizontal(avatar, -50)
+        avatar.style.transform = 'scale(1,1)'
+    }
+    
+})
+
+const moveVertical = (element, value) => {
+    const currTop = extractPos(element.style.top)
+    element.style.top = `${currTop + value}px`
+}
+
+const moveHorizontal = (element, value) => {
+    const currLeft = extractPos(element.style.left)
+    element.style.left = `${currLeft + value}px`
+}
+
+const extractPos = (val) => {
+    if(!val){
+        return 100
+    }
+    return parseInt(val.slice(0,-2))
+}
+
+const moveCoin = () => {
+    const x = Math.floor(Math.random() * window.innerWidth)
+    const y = Math.floor(Math.random() * window.innerHeight)
+    coin.style.left = `${x}px`
+    coin.style.top = `${y}px`
+}
